@@ -1,5 +1,6 @@
 var http = require('http');
 var fs = require('fs');
+var util = require('./util.js');
 
 var ip = '127.0.0.1';
 var port = 3000;
@@ -18,7 +19,7 @@ var server = http.createServer(function(req,res){
         if(err){
           console.log("error:",err);
         }else{
-          var secretWord = pickWord(data.split('\n'));
+          var secretWord = util.pickWord(data.split('\n'));
           res.writeHead(200, "Content-Type:application/json");
           res.end(JSON.stringify(secretWord));
         }
@@ -26,11 +27,7 @@ var server = http.createServer(function(req,res){
     }
   }
 });
+
 console.log(`Listening on port: ${port}`);
 
 server.listen(port,ip);
-
-var pickWord = function(dictionary) {
-  var randomIndex = Math.floor(Math.random()*(dictionary.length-0));
-  return dictionary[randomIndex];
-}
