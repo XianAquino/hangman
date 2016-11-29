@@ -1,9 +1,9 @@
 angular.module('hangman.guess', [])
-.controller('GuessController', function($scope,$location, Word){
+.controller('GuessController', function($scope,$location, Word, State){
 
   $scope.data = {};
   $scope.data.wrongGuess = "";
-  $scope.data.gameState = "ongoing";
+  State.game = "ongoing";
 
   var getSecretWord = function(){
     Word.getData()
@@ -22,11 +22,12 @@ angular.module('hangman.guess', [])
     var index = $scope.data.secretWord.indexOf(letter);
     if(index >= 0 ) {
       placeLetters(letter);
+      displayText();
+      checkWinner();
     }else{
       $scope.data.wrongGuess+=` ${letter}`;
-      checkGameState();
+      checkGameOver();
     }
-    displayText();
     $scope.letter = "";
   }
 
@@ -34,10 +35,18 @@ angular.module('hangman.guess', [])
     $scope.data.display = $scope.data.temp.join("");
   }
 
-  var checkGameState = function(){
+  var checkGameOver = function(){
     var mistakes = $scope.data.wrongGuess.replace(/ /g,"").length;
     if(mistakes === 6){
-      $scope.data.gameState = "Game over";
+      State.game = "Game over";
+      $location.path('/gameover');
+    }
+  }
+
+  var checkWinner = function(){
+    if( $scope.data.display === $scope.data.secretWord ){
+      State.game = "You Win!!!";
+      $location.path('/gameover');
     }
   }
 
@@ -50,7 +59,6 @@ angular.module('hangman.guess', [])
       }
     });
   }
-
 
   getSecretWord();
 

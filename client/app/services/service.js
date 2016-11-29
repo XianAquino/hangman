@@ -10,4 +10,9 @@ angular.module('hangman.services', [])
       });
     }
   }
-});
+})
+.factory('State', function(){
+  return {
+    game:""
+  }
+})
